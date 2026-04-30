@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lumon Industries: Teacher's Compliance Guide</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lumon: {
+                            blue: '#005a78',
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                            green: '#16a34a',
+                            border: '#cbd5e1',
+                            bg: '#e0eaf5', /* Azul claro muito suave e agradável aos olhos */
+                            woe: '#3b82f6',
+                            frolic: '#eab308',
+                            dread: '#ef4444',
+                            malice: '#a855f7'
+                        }
+                    },
+                    fontFamily: {
+                        corp: ['Inter', 'sans-serif'],
+                        mono: ['Courier Prime', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #b8cadd;
+            color: #0f172a;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            font-weight: 500;
+            transition: background-color 1s ease; /* Transição suave para o branco */
+        }
+
+        /* Classe que ativa o fundo branco da Lumon */
+        body.innie-mode {
+            background-color: #ffffff;
+        }
+
+        /* Classe para o azul bebé nas páginas finais (Cool down) */
+        body.outro-mode {
+            background-color: #e0f2fe;
+        }
+
+        /* --- Pagination / Slide System --- */
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            padding: 2rem 4rem;
+            overflow-y: auto;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .page.active { display: flex; }
+        
+        .page-content {
+            margin: auto;
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #005a78; border-radius: 4px; }
+
+        /* --- Lumon Aesthetic --- */
+        .lumon-border { border: 2px solid #005a78; }
+        .lumon-shadow { box-shadow: 4px 4px 0px #005a78; }
+        .data-card {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .data-card:hover {
+            border-color: #005a78;
+            box-shadow: 4px 4px 0px #005a78;
+            transform: translateY(-2px);
+        }
+
+        /* --- Notepad & Dict Panels --- */
+        #notepad-panel, #dict-panel { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        /* --- Interactive Reveal --- */
+        .reveal-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .data-card.open .reveal-content {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        /* --- Animations --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        
+        @keyframes pulse-fast {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-fast { animation: pulse-fast 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        
+        /* --- Terminal CRT Effect --- */
+        .crt {
+            background: #000;
+            color: #4ade80;
+            text-shadow: 0 0 5px #4ade80;
+            position: relative;
+            overflow: hidden;
+        }
+        .crt::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        .redacted {
+            background-color: #0f172a !important;
+            color: #0f172a !important;
+            border-radius: 4px;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="flex h-screen w-screen relative bg-lumon-bg selection:bg-lumon-blue selection:text-white">
+
+    <!-- TOP BAR -->
+    <header class="fixed top-0 left-0 w-full h-16 bg-white border-b-2 border-lumon-blue z-40 flex items-center justify-between px-6">
+        <div class="flex items-center gap-4">
+            <div class="w-8 h-8 rounded-full border-4 border-lumon-blue border-t-transparent animate-spin" style="animation-duration: 3s;"></div>
+            <h1 class="font-corp font-black tracking-tighter text-xl text-lumon-blue uppercase">Lumon Industries</h1>
+            <span class="font-mono text-sm font-bold tracking-widest text-slate-600 border-l border-slate-300 pl-4">Compliance Guide v1.0</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="toggleFullscreen()" class="font-mono text-sm font-bold text-lumon-blue border border-lumon-blue px-3 py-1 hover:bg-lumon-blue hover:text-white transition-colors">
+                [ FULLSCREEN ]
+            </button>
+            <button onclick="toggleNotepad()" class="font-mono text-sm font-bold bg-lumon-blue text-white px-4 py-1 hover:bg-lumon-dark transition-colors lumon-shadow">
+                OPEN NOTEPAD
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="pt-16 pb-20 w-full h-full relative flex flex-col">
+        
+        <!-- PAGE 1: COVER -->
+        <section class="page active text-center">
+            <div class="page-content items-center">
+                <div class="w-full max-w-2xl bg-white p-4 lumon-border lumon-shadow mb-8 relative">
+                    <div class="absolute top-2 left-2 w-3 h-3 bg-lumon-blue rounded-full"></div>
+                    <div class="absolute top-2 right-2 w-3 h-3 bg-lumon-blue rounded-full"></div>
+                    <img src="https://metawitches.com/wp-content/uploads/2022/03/sevposter.jpeg" alt="Severance Cover" class="w-full h-auto object-cover border border-slate-200 grayscale contrast-125">
+                </div>
+                <h1 class="text-5xl font-black text-lumon-dark uppercase tracking-tighter mb-4">Teacher's Guide</h1>
+                <p class="font-mono tracking-widest font-bold text-lumon-blue text-lg mb-3">SEVERANCE: MASTERCLASS MODULE</p>
+                <p class="text-base font-semibold text-slate-600">Classified pedagogical material. Do not distribute outside the Severed Floor.</p>
+            </div>
+        </section>
+
+        <!-- PAGE 2: WELCOME DIRECTIVE -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Directive 001</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8 border-b-4 border-lumon-blue pb-4 inline-block w-max">Welcome, Educator</h1>
+                <div class="prose max-w-4xl text-xl leading-relaxed text-slate-800">
+                    <p class="mb-6">Good morning. You have been selected to guide your Innie students through this module.</p>
+                    <p class="mb-6">This lesson is completely driven by the official trailer. We will break it down into two distinct zones: The <strong>Outie</strong> (melancholia, regret) and the <strong>Innie</strong> (corporate compliance, passive voice).</p>
+                    <p class="mb-6 font-bold text-lumon-blue">Your role is to maintain order, trigger the videos, and ensure compliance.</p>
+                    <div class="bg-white p-6 border-l-4 border-lumon-blue mt-8 shadow-sm">
+                        <h3 class="font-bold uppercase text-base mb-3 text-slate-700">Lesson Specs:</h3>
+                        <ul class="list-disc pl-5 font-mono font-bold text-base text-slate-700 space-y-3">
+                            <li><strong>Target Level:</strong> B2 / C1</li>
+                            <li><strong>Focus:</strong> Second Conditional, Passive Voice, Advanced Speaking.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: WARM UP - WORK/LIFE BALANCE -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Warm-Up Phase</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Work/Life Balance</h1>
+                <p class="text-xl mb-8 font-semibold text-slate-700">Click the cards to reveal the Lumon assessment prompts.</p>
+                
+                <div class="grid gap-6 w-full max-w-4xl">
+                    <div class="data-card p-6" onclick="this.classList.toggle('open')">
+                        <div class="flex justify-between items-center">
+                            <p class="font-bold text-2xl text-lumon-dark">1. The Golden Ratio</p>
+                            <span class="text-lumon-blue font-bold text-2xl">+</span>
+                        </div>
+                        <p class="text-slate-700 text-lg italic mt-2">"Do you believe true work-life balance exists, or is it a corporate myth?"</p>
+                        <div class="reveal-content">
+                            <p class="text-base font-mono font-bold text-lumon-blue">> Teacher Note: Challenge them. If it's a myth, what is the alternative?</p>
+                        </div>
+                    </div>
+                    <div class="data-card p-6" onclick="this.classList.toggle('open')">
+                        <div class="flex justify-between items-center">
+                            <p class="font-bold text-2xl text-lumon-dark">2. The Disconnect</p>
+                            <span class="text-lumon-blue font-bold text-2xl">+</span>
+                        </div>
+                        <p class="text-slate-700 text-lg italic mt-2">"How hard is it for you to stop thinking about your job or studies when you get home?"</p>
+                        <div class="reveal-content">
+                            <p class="text-base font-mono font-bold text-lumon-blue">> Follow-up: Have you ever ruined a weekend because you were stressed about Monday?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: WARM UP - MEMORY -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Warm-Up Phase</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Memory & Identity</h1>
+                
+                <div class="bg-lumon-blue text-white p-8 mb-8 lumon-shadow">
+                    <h3 class="font-black text-3xl mb-4">"Are we just our memories?"</h3>
+                    <p class="text-xl leading-relaxed font-medium">If you remove a person's memories, are they still the same person?</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="data-card p-6" onclick="this.classList.toggle('open')">
+                        <p class="font-black text-xl text-lumon-dark">The Bad Memory</p>
+                        <p class="mt-2 text-lg text-slate-700">If you could permanently delete one bad memory, would you?</p>
+                        <div class="reveal-content">
+                            <p class="text-lumon-blue font-bold font-mono">Why or why not? How do bad memories shape our personality?</p>
+                        </div>
+                    </div>
+                    <div class="data-card p-6" onclick="this.classList.toggle('open')">
+                        <p class="font-black text-xl text-lumon-dark">The Good Memory</p>
+                        <p class="mt-2 text-lg text-slate-700">What is a memory you would pay to experience again for the first time?</p>
+                        <div class="reveal-content">
+                            <p class="text-lumon-blue font-bold font-mono">Would reliving it artificially cheapen the original experience?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 5: WARM UP - CORPORATE CULTURE -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Warm-Up Phase</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Corporate Culture</h1>
+                
+                <p class="text-xl font-semibold text-slate-700 mb-8">Explore the modern workplace before introducing Lumon's rules. Click to reveal.</p>
+
+                <div class="grid grid-cols-2 gap-6 max-w-4xl">
+                    <div class="data-card p-6" onclick="this.classList.toggle('open')">
+                        <h3 class="font-black text-xl mb-2 text-lumon-dark">Team Building</h3>
+                        <p class="text-slate-700 text-base italic">"What is the most forced or awkward 'fun' activity you've ever had to do at a job?"</p>
+                        <div class="reveal-content text-sm font-mono text-lumon-blue font-bold">Write their answers on the Notepad.</div>
+                    </div>
+                    <div class="data-card p-6" onclick="this.classList.toggle('open')">
+                        <h3 class="font-black text-xl mb-2 text-lumon-dark">Buzzwords</h3>
+                        <p class="text-slate-700 text-base italic">"What corporate buzzwords (e.g., 'synergy') annoy you the most?"</p>
+                        <div class="reveal-content text-sm font-mono text-lumon-blue font-bold">Write their answers on the Notepad.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 6: LEXICON REFINEMENT - INTRODUCTION -->
+        <section class="page text-center">
+            <div class="page-content items-center">
+                <div class="w-24 h-24 border-4 border-lumon-blue rounded flex items-center justify-center mb-8 mx-auto rotate-45 bg-white shadow-sm">
+                    <div class="w-12 h-12 bg-lumon-blue -rotate-45"></div>
+                </div>
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-4 uppercase text-base">System Update Required</h2>
+                <h1 class="text-5xl font-black text-lumon-dark uppercase tracking-tighter mb-6">Lexicon Refinement</h1>
+                <p class="text-2xl text-slate-700 font-medium max-w-3xl mx-auto leading-relaxed">
+                    The students must familiarize themselves with approved terminology before we play the trailer.
+                </p>
+            </div>
+        </section>
+
+        <!-- PAGE 7: VOCABULARY - SEVER -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Lexicon Card 01</h2>
+                <h1 class="text-5xl font-black text-lumon-dark uppercase tracking-tighter mb-10">To Sever</h1>
+                
+                <div class="flex gap-8 items-start">
+                    <div class="w-1/3 bg-white p-8 text-center border-t-8 border-lumon-blue shadow-sm">
+                        <span class="text-7xl mb-6 block">✂️</span>
+                        <p class="font-mono font-bold text-xl mb-2">/ˈsɛvər/</p>
+                        <p class="text-base font-bold text-slate-500 uppercase tracking-widest">Verb</p>
+                    </div>
+                    <div class="w-2/3 bg-white p-8 border border-slate-200 shadow-sm">
+                        <h3 class="text-2xl font-bold mb-4 border-b border-slate-300 pb-2 text-lumon-dark">Definition</h3>
+                        <p class="text-xl mb-8 text-slate-800 leading-relaxed font-medium">To divide by cutting or slicing, suddenly and completely. To put an end to a connection or relationship.</p>
+                        <h3 class="text-xl font-bold mb-3 text-lumon-blue">Corporate Context:</h3>
+                        <p class="text-lg italic bg-slate-50 p-6 border-l-4 border-lumon-blue text-slate-700">
+                            "Lumon Industries has developed a procedure to sever your work memories from your personal memories."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 8: VOCABULARY - GRIEF / COPE -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Lexicon Cards 02 & 03</h2>
+                <h1 class="text-5xl font-black text-lumon-dark uppercase tracking-tighter mb-10">Grief & Coping</h1>
+                
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="bg-white p-8 border-t-8 border-slate-800 shadow-sm">
+                        <h3 class="text-3xl font-black text-lumon-dark mb-2">Grief <span class="text-xl font-mono text-slate-400 font-normal">/ɡriːf/</span></h3>
+                        <p class="text-base font-bold text-slate-500 uppercase tracking-widest mb-4 border-b pb-2">Noun</p>
+                        <p class="text-xl mb-6 text-slate-800 font-medium">Deep sadness, especially that caused by someone's death.</p>
+                    </div>
+                    <div class="bg-white p-8 border-t-8 border-lumon-green shadow-sm">
+                        <h3 class="text-3xl font-black text-lumon-dark mb-2">To Cope <span class="text-xl font-mono text-slate-400 font-normal">/koʊp/</span></h3>
+                        <p class="text-base font-bold text-slate-500 uppercase tracking-widest mb-4 border-b pb-2">Verb</p>
+                        <p class="text-xl mb-6 text-slate-800 font-medium">To deal successfully with a difficult situation or problem.</p>
+                        <p class="text-lg italic text-slate-600">Ex: "He severed his memories to <strong>cope with</strong> his grief."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 9: VOCABULARY - JARGON -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Lexicon Card 04</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Internal Lumon Jargon</h1>
+                <p class="text-xl mb-8 font-medium text-slate-700">Present these terms. They appear frequently in the trailer.</p>
+                
+                <div class="grid grid-cols-2 gap-6 max-w-4xl">
+                    <div class="border-2 border-slate-300 p-6 flex justify-between items-center bg-white shadow-sm">
+                        <span class="font-black text-2xl text-lumon-blue">Outie</span>
+                        <span class="text-slate-600 font-semibold text-lg">The outside person</span>
+                    </div>
+                    <div class="border-2 border-slate-300 p-6 flex justify-between items-center bg-white shadow-sm">
+                        <span class="font-black text-2xl text-lumon-blue">Innie</span>
+                        <span class="text-slate-600 font-semibold text-lg">The severed worker</span>
+                    </div>
+                    <div class="border-2 border-slate-300 p-6 flex justify-between items-center bg-slate-50 shadow-sm">
+                        <span class="font-black text-2xl text-lumon-blue">MDR</span>
+                        <span class="text-slate-600 font-mono font-bold text-base">Macrodata Refinement</span>
+                    </div>
+                    <div class="border-2 border-slate-300 p-6 flex justify-between items-center bg-slate-50 shadow-sm">
+                        <span class="font-black text-2xl text-lumon-blue">Break Room</span>
+                        <span class="text-slate-600 font-mono font-bold text-base">Punishment Room</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 10: GRAMMAR - SECOND CONDITIONAL -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Grammar Directive 01</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">The Second Conditional</h1>
+                
+                <div class="bg-lumon-dark text-white p-10 rounded-lg mb-8 shadow-lg">
+                    <p class="text-3xl font-mono text-center font-bold">"If I <span class="text-lumon-green">were</span> you, I <span class="text-lumon-blue">would sever</span> my memories."</p>
+                </div>
+
+                <h3 class="font-bold text-2xl border-b-2 border-slate-300 pb-2 mb-4 text-lumon-dark">Pedagogical Approach:</h3>
+                <p class="text-xl mb-6 text-slate-800 leading-relaxed font-medium">Explain that we use the Second Conditional for situations that are <strong class="text-lumon-dark">imaginary, unlikely, or impossible</strong> in the present or future.</p>
+                
+                <div class="bg-white p-6 font-mono font-bold text-lg border-l-4 border-lumon-blue text-slate-800 shadow-sm">
+                    Structure: If + Past Simple, ... would + Verb (infinitive)
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 11: GRAMMAR - CCQs -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Grammar Directive 01</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Concept Checking Questions (CCQs)</h1>
+                
+                <p class="text-xl font-medium mb-8 text-slate-700">Use these questions to ensure students understand the hypothetical nature of the grammar.</p>
+
+                <div class="bg-white p-8 shadow-sm border border-slate-200">
+                    <p class="text-2xl font-bold mb-6 text-lumon-dark italic font-mono border-b border-slate-200 pb-4">"If Mark didn't sever his memories, he wouldn't survive."</p>
+                    <ul class="list-none space-y-6 text-slate-800 text-lg font-medium">
+                        <li class="flex items-start">
+                            <span class="font-black text-lumon-blue mr-3">Q:</span> 
+                            <div>Did Mark sever his memories? <br><span class="text-lumon-green font-bold text-base block mt-1 uppercase">> Yes.</span></div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-black text-lumon-blue mr-3">Q:</span> 
+                            <div>Is he surviving right now? <br><span class="text-lumon-green font-bold text-base block mt-1 uppercase">> Yes.</span></div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-black text-lumon-blue mr-3">Q:</span> 
+                            <div>Are we talking about the real past or an imaginary situation? <br><span class="text-lumon-green font-bold text-base block mt-1 uppercase">> Imaginary situation.</span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 12: GRAMMAR - DRILLS -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Grammar Directive 01</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Oral Drills</h1>
+                
+                <p class="text-xl mb-8 font-medium text-slate-700">Have the students complete these sentences out loud.</p>
+
+                <ol class="list-decimal pl-6 space-y-8 text-2xl max-w-4xl font-mono font-bold text-slate-800">
+                    <li>If Lumon <span class="text-lumon-blue bg-blue-50 px-2 py-1 rounded">[to offer]</span> me the job, I <span class="text-lumon-blue bg-blue-50 px-2 py-1 rounded">[not / to take]</span> it.</li>
+                    <li>If I <span class="text-lumon-blue bg-blue-50 px-2 py-1 rounded">[to be]</span> an Innie, I <span class="text-lumon-blue bg-blue-50 px-2 py-1 rounded">[to try]</span> to escape.</li>
+                    <li>She <span class="text-lumon-blue bg-blue-50 px-2 py-1 rounded">[to be]</span> happier if she <span class="text-lumon-blue bg-blue-50 px-2 py-1 rounded">[to know]</span> her Outie.</li>
+                </ol>
+
+                <div class="mt-12 p-6 bg-white text-base border-l-4 border-slate-400 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors" onclick="this.querySelector('.ans').classList.toggle('hidden')">
+                    <strong class="text-lumon-dark uppercase tracking-widest">Show Answer Key</strong> 
+                    <div class="ans hidden mt-4 text-lumon-blue font-mono font-bold text-lg">
+                        1. offered / wouldn't take. <br>2. were / would try. <br>3. would be / knew.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 13: LUMON TERMINAL ACCESS (SYNOPSIS) -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Classified File</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Terminal Access</h1>
+                
+                <p class="text-xl font-medium mb-6 max-w-4xl text-slate-700 leading-relaxed">Present this confidential synopsis to the class. Click the glowing green keywords to access the Lumon Lexicon (Dictionary).</p>
+
+                <div class="crt p-10 border-8 border-slate-800 rounded-lg min-h-[300px] flex flex-col justify-center shadow-2xl">
+                    <p class="font-mono text-xl mb-4">> ACCESSING FILE: SCOUT, MARK</p>
+                    <p class="font-mono text-xl mb-4">> STATUS: SEVERED</p>
+                    <p class="font-mono text-xl leading-loose mt-4">
+                        BACKGROUND: Following the loss of his wife, subject experienced severe 
+                        <span class="cursor-pointer text-green-300 border-b border-green-300 hover:bg-green-800 px-1" onclick="openDict('grief')">grief</span>. 
+                        To regain <span class="cursor-pointer text-green-300 border-b border-green-300 hover:bg-green-800 px-1" onclick="openDict('balance')">balance</span>, 
+                        subject opted for a <span class="cursor-pointer text-green-300 border-b border-green-300 hover:bg-green-800 px-1" onclick="openDict('surgical')">surgical</span> 
+                        <span class="cursor-pointer text-green-300 border-b border-green-300 hover:bg-green-800 px-1" onclick="openDict('procedure')">procedure</span> known as Severance.
+                    </p>
+                    <p class="font-mono text-xl leading-loose mt-4">
+                        CURRENT DIRECTIVE: Monitor subject for signs of memory leakage.
+                    </p>
+                    <p class="font-mono text-xl mt-8 animate-pulse-fast">> AWAITING VIDEO FEED...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- START OF "INNIE MODE" (WHITE BACKGROUND)   -->
+        <!-- ========================================== -->
+
+        <!-- PAGE 14: THE TRAILER EMBED -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Screening Facility</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Official Trailer Playback</h1>
+                
+                <div class="w-full aspect-video border-4 border-lumon-dark shadow-2xl bg-black mb-6">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/xEQP4VVuyrY?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                
+                <div class="bg-white p-6 border-l-4 border-lumon-blue text-left shadow-sm">
+                    <p class="font-bold uppercase text-base text-lumon-blue mb-2 tracking-widest font-mono">Instruction to class:</p>
+                    <p class="italic text-xl text-slate-800 font-semibold">"Watch carefully. How does his body language change from the parking lot to the office floor? Pay attention to the voiceover."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 15: SCRIPT ANALYSIS 1 -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Document Review</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Script Analysis: Part 1</h1>
+                
+                <p class="text-xl mb-6 font-medium text-slate-700">Analyze the voiceover transcript with the class. Click highlighted words for context.</p>
+
+                <div class="bg-white p-10 border border-slate-200 shadow-md font-mono text-xl leading-relaxed text-slate-800 font-medium">
+                    <p class="mb-4">"Lumon Industries has developed a procedure to <span class="bg-blue-100 text-lumon-blue font-bold px-1 cursor-pointer hover:bg-blue-200" onclick="openDict('sever')">sever</span> your work memories from your personal memories."</p>
+                    
+                    <p class="mb-4">"You'll undergo a brief surgical procedure, and then you'll wake up on the <span class="bg-blue-100 text-lumon-blue font-bold px-1 cursor-pointer hover:bg-blue-200" onclick="openDict('severed_floor')">severed floor</span>."</p>
+                    
+                    <p class="mb-4 border-l-4 border-lumon-green pl-4">"I know you're dealing with the <span class="bg-green-100 text-lumon-green font-bold px-1 cursor-pointer hover:bg-green-200" onclick="openDict('grief')">grief</span> of losing your wife... This is a way to <span class="bg-green-100 text-lumon-green font-bold px-1 cursor-pointer hover:bg-green-200" onclick="openDict('cope')">cope</span>."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 16: SCREENING 1 - COMPREHENSION -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Post-Screening</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Comprehension Checks</h1>
+                
+                <div class="space-y-6">
+                    <div class="data-card p-6 border-l-8 border-lumon-blue shadow-sm" onclick="this.classList.toggle('open')">
+                        <p class="font-bold text-2xl text-lumon-dark font-mono italic">Q: What specific action physically separates Mark's personal life from his work life in the car?</p>
+                        <div class="reveal-content text-lumon-green font-bold text-xl uppercase tracking-widest mt-4">
+                            > Answer: Changing his ID badge in the car.
+                        </div>
+                    </div>
+                    <div class="data-card p-6 border-l-8 border-lumon-blue shadow-sm" onclick="this.classList.toggle('open')">
+                        <p class="font-bold text-2xl text-lumon-dark font-mono italic">Q: How would you describe the aesthetic of the Lumon building?</p>
+                        <div class="reveal-content text-lumon-green font-bold text-xl uppercase tracking-widest mt-4">
+                            > Answer: Sterile, white, labyrinth-like, eerie.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 17: GRAMMAR 2 - PASSIVE VOICE -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Grammar Directive 02</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">The Passive Voice</h1>
+                
+                <p class="text-xl mb-8 text-slate-700 font-medium leading-relaxed">Corporate environments use the Passive Voice to remove human agency and sound more authoritative. It sounds like "the system" is doing it, not a person.</p>
+
+                <div class="flex gap-8">
+                    <div class="w-1/2 bg-red-50 p-8 border border-red-200 shadow-sm rounded-sm">
+                        <h3 class="font-black text-red-800 mb-4 uppercase text-base tracking-widest border-b border-red-200 pb-2">Active (Human)</h3>
+                        <p class="text-2xl italic font-medium text-slate-800">"The doctors <strong class="text-red-700">severed</strong> his memories."</p>
+                    </div>
+                    <div class="w-1/2 bg-green-50 p-8 border border-green-200 shadow-sm rounded-sm">
+                        <h3 class="font-black text-green-800 mb-4 uppercase text-base tracking-widest border-b border-green-200 pb-2">Passive (Corporate)</h3>
+                        <p class="text-2xl italic font-medium text-slate-800">"His memories <strong class="text-green-700">were severed</strong>."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 18: GRAMMAR 2 - TRANSFORMING RULES -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Grammar Directive 02</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Transforming the Rules</h1>
+                
+                <p class="text-xl font-medium mb-8 text-slate-700">Ask students to transform these active Lumon rules into the Passive Voice. Click to reveal answers.</p>
+
+                <div class="space-y-6 font-mono text-xl font-bold text-slate-800">
+                    <div class="data-card p-6 border-2 border-slate-300 bg-white shadow-sm" onclick="this.classList.toggle('open')">
+                        <p class="text-slate-500 mb-2">1. The managers do not allow outside communication.</p>
+                        <div class="reveal-content text-lumon-blue mt-2 pt-2 border-t border-slate-200">> Outside communication is not allowed.</div>
+                    </div>
+                    <div class="data-card p-6 border-2 border-slate-300 bg-white shadow-sm" onclick="this.classList.toggle('open')">
+                        <p class="text-slate-500 mb-2">2. The board monitors all employees.</p>
+                        <div class="reveal-content text-lumon-blue mt-2 pt-2 border-t border-slate-200">> All employees are monitored.</div>
+                    </div>
+                    <div class="data-card p-6 border-2 border-slate-300 bg-white shadow-sm" onclick="this.classList.toggle('open')">
+                        <p class="text-slate-500 mb-2">3. The company holds a waffle party every quarter.</p>
+                        <div class="reveal-content text-lumon-blue mt-2 pt-2 border-t border-slate-200">> A waffle party is held every quarter.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 19: SCRIPT ANALYSIS 2 & DEEP DIVE -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Document Review</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Script Analysis: Part 2</h1>
+                
+                <div class="bg-lumon-dark text-white p-8 mb-6 lumon-shadow rounded-sm font-mono text-xl leading-relaxed font-medium">
+                    <p class="mb-4">"Good news about <span class="bg-blue-900 px-1 border-b-2 border-blue-400 cursor-pointer hover:bg-blue-700" onclick="openDict('hell')">hell</span>: It's just the product of a <span class="bg-blue-900 px-1 border-b-2 border-blue-400 cursor-pointer hover:bg-blue-700" onclick="openDict('imagination')">severed imagination</span>."</p>
+                    <p class="mb-4">"But you... you are not in hell."</p>
+                    <p class="text-lumon-green font-bold text-2xl mt-6">"Every time you find yourself here, it's because you <span class="border-b-2 border-lumon-green cursor-pointer hover:bg-lumon-green hover:text-lumon-dark px-1" onclick="openDict('chose')">chose</span> to come back."</p>
+                </div>
+
+                <h3 class="font-black text-xl mb-4 text-lumon-blue uppercase tracking-widest">Discussion Prompts:</h3>
+                <ul class="space-y-3 text-lg font-medium text-slate-800 bg-white p-6 border border-slate-200 shadow-sm">
+                    <li class="flex items-start"><span class="text-lumon-blue font-black text-xl mr-3 leading-none">></span> <span>Why is this quote so terrifying for the Innie?</span></li>
+                    <li class="flex items-start"><span class="text-lumon-blue font-black text-xl mr-3 leading-none">></span> <span>Who is the "you" making the choice? (The Outie).</span></li>
+                    <li class="flex items-start"><span class="text-lumon-blue font-black text-xl mr-3 leading-none">></span> <span>Does the Innie actually have free will?</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- PAGE 20: INTERROGATION ROLEPLAY -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Interactive Activity</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Roleplay: The Interrogation</h1>
+                
+                <p class="text-xl font-medium mb-10 max-w-4xl text-slate-700 leading-relaxed">Guide the students through the Roleplay. Ensure they focus on intonation.</p>
+
+                <div class="flex gap-6">
+                    <div class="w-1/2 bg-white p-8 border-t-8 border-lumon-dark shadow-md">
+                        <h3 class="font-black text-2xl mb-3 text-lumon-dark uppercase">Teacher (Ms. Cobel)</h3>
+                        <p class="text-slate-700 text-lg italic mb-6 font-semibold">Tone: Cold, polite but threatening, authoritative.</p>
+                        <p class="font-mono font-bold text-base text-slate-600 bg-slate-100 p-4 border border-slate-200">Focus on clearly delivering the Second Conditional threats.</p>
+                    </div>
+                    <div class="w-1/2 bg-white p-8 border-t-8 border-lumon-blue shadow-md">
+                        <h3 class="font-black text-2xl mb-3 text-lumon-blue uppercase">Student (Mark S.)</h3>
+                        <p class="text-slate-700 text-lg italic mb-6 font-semibold">Tone: Confused, submissive, slightly panicked.</p>
+                        <p class="font-mono font-bold text-base text-slate-600 bg-slate-100 p-4 border border-slate-200">Ensure they express the desperation of not knowing their own outside identity.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 21: THE BREAK ROOM -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Phonetics & Intonation</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">The Break Room</h1>
+                
+                <p class="text-xl font-medium mb-6 max-w-4xl text-slate-700 leading-relaxed">The student must read the <strong>Compulsion Statement</strong> out loud with perfect sincerity. If their intonation is flat or robotic, reject it.</p>
+
+                <div class="bg-lumon-dark text-white p-10 shadow-md mb-8 border-4 border-slate-700 relative overflow-hidden" id="polygraph-box">
+                    <h3 class="font-mono text-slate-400 mb-4 uppercase tracking-widest text-sm border-b border-slate-600 pb-2">Compulsion Statement to be read by the Innie:</h3>
+                    <p class="text-2xl font-corp italic leading-loose font-medium relative z-10">"Forgive me for the harm I have caused this world. None may atone for my actions but me, and only in me shall their stain live on."</p>
+                    <div id="polygraph-overlay" class="absolute inset-0 opacity-0 transition-opacity duration-300 z-0"></div>
+                </div>
+
+                <div class="flex gap-6 max-w-4xl justify-center">
+                    <button onclick="triggerPolygraph(false)" class="bg-red-50 text-red-700 border-2 border-red-300 font-bold px-8 py-4 text-xl hover:bg-red-100 transition-colors flex-1 uppercase tracking-widest">
+                        Reject (Not Sincere)
+                    </button>
+                    <button onclick="triggerPolygraph(true)" class="bg-green-50 text-lumon-green border-2 border-green-300 font-bold px-8 py-4 text-xl hover:bg-green-100 transition-colors flex-1 uppercase tracking-widest">
+                        Accept (Sincere)
+                    </button>
+                </div>
+                <div id="polygraph-feedback" class="h-10 mt-6 text-center font-mono font-bold text-xl uppercase tracking-widest"></div>
+            </div>
+        </section>
+
+        <!-- PAGE 22: WELLNESS SESSION -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Listening Comprehension</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Wellness Session</h1>
+                
+                <p class="text-xl font-medium mb-6 max-w-4xl text-slate-700 leading-relaxed">Read these bizarre facts about the student's "Outie". The student must reply exactly: <strong class="text-lumon-blue bg-white px-2 border border-slate-300">"I appreciate all facts equally"</strong> without laughing or hesitating.</p>
+
+                <div class="grid grid-cols-1 gap-4 max-w-4xl font-mono text-lg font-bold">
+                    <div class="data-card p-6 border-l-8 border-lumon-green" onclick="this.classList.toggle('open')">
+                        <p class="text-slate-500 uppercase tracking-widest mb-2 text-sm">Fact 01 (Click to Reveal)</p>
+                        <div class="reveal-content mt-0 pt-0 border-none text-lumon-dark text-xl leading-relaxed">
+                            "If your Outie were an animal, he would be a very tired, but deeply respected, pigeon."
+                        </div>
+                    </div>
+                    <div class="data-card p-6 border-l-8 border-lumon-green" onclick="this.classList.toggle('open')">
+                        <p class="text-slate-500 uppercase tracking-widest mb-2 text-sm">Fact 02 (Click to Reveal)</p>
+                        <div class="reveal-content mt-0 pt-0 border-none text-lumon-dark text-xl leading-relaxed">
+                            "Your Outie's favorite movie is a 3-hour documentary about competitive cheese rolling."
+                        </div>
+                    </div>
+                    <div class="data-card p-6 border-l-8 border-lumon-green" onclick="this.classList.toggle('open')">
+                        <p class="text-slate-500 uppercase tracking-widest mb-2 text-sm">Fact 03 (Click to Reveal)</p>
+                        <div class="reveal-content mt-0 pt-0 border-none text-lumon-dark text-xl leading-relaxed">
+                            "If your Outie didn't work at Lumon, she would probably try to communicate with ghosts using a toaster."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 23: SEVERANCE PROCEDURE INTERACTIVE -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Fluency Activity</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-4">Disappearing Memory</h1>
+                
+                <p class="text-lg font-medium mb-6 text-slate-700 leading-relaxed">
+                    <strong>Disappearing Text Drill:</strong> Have the student read the text aloud. Then, click "SEVER 20%" to erase parts of the text. The student must read it again from memory.
+                </p>
+
+                <div class="bg-white p-8 border-2 border-slate-300 shadow-md mb-6 min-h-[220px]">
+                    <p id="sever-text-container" class="text-2xl leading-loose font-mono text-lumon-dark font-bold">
+                        <!-- Filled by JS -->
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <button onclick="severTextMemory()" class="bg-lumon-dark text-white font-mono font-bold text-xl px-8 py-3 hover:bg-red-600 transition-colors uppercase tracking-widest shadow-lg">
+                        ⚠️ SEVER 20%
+                    </button>
+                    <button onclick="resetSeverText()" class="ml-4 font-mono font-bold text-slate-500 hover:text-lumon-blue uppercase tracking-widest">
+                        [ RESET ]
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 24: COMPLIANCE TERMINAL INTERACTIVE -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Grammar Activity</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-4">Compliance Terminal</h1>
+                
+                <p class="text-lg font-medium mb-6 text-slate-700 leading-relaxed">
+                    Emergency compliance check. The student has <strong>15 seconds</strong> to identify and click the sentence containing a Grammar Violation (Passive Voice or 2nd Conditional error).
+                </p>
+
+                <div class="crt p-8 border-8 border-slate-800 rounded-lg min-h-[350px] flex flex-col justify-center">
+                    <div id="terminal-start" class="text-center">
+                        <p class="font-mono text-2xl mb-8">> INITIATE PROTOCOL?</p>
+                        <button onclick="startTerminal()" class="border-2 border-green-400 text-green-400 px-8 py-3 font-mono font-bold text-2xl hover:bg-green-400 hover:text-black transition-colors">
+                            [ START SCAN ]
+                        </button>
+                    </div>
+
+                    <div id="terminal-game" class="hidden w-full max-w-3xl mx-auto">
+                        <div class="w-full bg-green-900 h-2 mb-6">
+                            <div id="terminal-timer" class="h-full bg-green-400 w-full transition-all linear"></div>
+                        </div>
+                        <p class="font-mono text-xl mb-6">> ISOLATE THE GRAMMAR VIOLATION:</p>
+                        <div class="space-y-4 font-mono text-xl">
+                            <button onclick="checkTerminal(false)" class="block w-full text-left p-4 border border-green-400 hover:bg-green-400 hover:text-black transition-colors">> The waffle party is held every quarter.</button>
+                            <button onclick="checkTerminal(true)" class="block w-full text-left p-4 border border-green-400 hover:bg-green-400 hover:text-black transition-colors">> If I was an Innie, I will escape.</button>
+                            <button onclick="checkTerminal(false)" class="block w-full text-left p-4 border border-green-400 hover:bg-green-400 hover:text-black transition-colors">> Outside communication is strictly prohibited.</button>
+                        </div>
+                    </div>
+
+                    <div id="terminal-result" class="hidden text-center">
+                        <p id="t-res-msg" class="font-mono text-3xl font-black mb-8 animate-pulse-fast"></p>
+                        <button onclick="resetTerminal()" class="font-mono text-green-400 underline hover:text-white">REBOOT SYSTEM</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 25: PURE CONVERSATION 1 -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Open Discussion</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">The Ethics of Lumon</h1>
+                
+                <p class="text-xl font-medium mb-8 text-slate-700 leading-relaxed">Engage the student in a free-flowing conversation about the moral implications of the Severance procedure.</p>
+
+                <div class="space-y-6">
+                    <div class="data-card p-8 border-l-8 border-lumon-blue shadow-sm" onclick="this.classList.toggle('open')">
+                        <p class="font-bold text-2xl mb-3 text-lumon-dark">1. The Concept of Consent</p>
+                        <p class="text-slate-700 text-lg italic">"If an 'Innie' only exists at work and cannot choose to quit, are they essentially a slave to their 'Outie'? Is this ethical?"</p>
+                        <div class="reveal-content text-sm font-mono text-lumon-blue font-bold">> Note: Discuss human rights and bodily autonomy.</div>
+                    </div>
+                    <div class="data-card p-8 border-l-8 border-lumon-blue shadow-sm" onclick="this.classList.toggle('open')">
+                        <p class="font-bold text-2xl mb-3 text-lumon-dark">2. Corporate Control</p>
+                        <p class="text-slate-700 text-lg italic">"Do you think real-world companies would use this technology if it were available? Why or why not?"</p>
+                        <div class="reveal-content text-sm font-mono text-lumon-blue font-bold">> Note: Draw parallels to bosses who demand employees be "always on" (checking emails at night, etc).</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 26: PURE CONVERSATION 2 -->
+        <section class="page">
+            <div class="page-content">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Speaking Practice</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">Your Innie vs. Outie</h1>
+                
+                <p class="text-xl font-medium mb-8 text-slate-700 leading-relaxed">Prompt the student to use the Second Conditional naturally by discussing their own hypothetical Severed life.</p>
+
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="bg-white p-8 border border-slate-200 shadow-sm flex flex-col justify-center relative hover:-translate-y-1 transition-transform">
+                        <h3 class="font-black text-2xl mb-4 text-lumon-dark">The Secret Life</h3>
+                        <p class="text-slate-700 text-lg italic leading-relaxed">"If your Innie could secretly send one 5-word message to your Outie, what do you think they would write?"</p>
+                    </div>
+                    <div class="bg-white p-8 border border-slate-200 shadow-sm flex flex-col justify-center relative hover:-translate-y-1 transition-transform">
+                        <h3 class="font-black text-2xl mb-4 text-lumon-dark">The Perfect Colleague</h3>
+                        <p class="text-slate-700 text-lg italic leading-relaxed">"If you had to choose one person from your real life to be trapped with you on the Severed Floor, who would it be and why?"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 27: POST-CLASS ASSIGNMENT -->
+        <section class="page">
+            <div class="page-content items-center text-center">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base">Homework Directive</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8">The Outie Letter</h1>
+                
+                <div class="bg-[#fefce8] p-10 border-2 border-yellow-400 lumon-shadow max-w-3xl rotate-1 mx-auto mt-4 text-left">
+                    <h3 class="font-mono text-2xl font-black mb-6 uppercase text-yellow-900 border-b-2 border-yellow-200 pb-2">Assignment Brief:</h3>
+                    <p class="text-xl mb-8 font-mono leading-loose text-slate-800 font-bold">
+                        "Write a 150-word letter from your Outie to your Innie. Explain why you made the decision to Sever them. Use at least two Second Conditional sentences and three vocabulary words from the lesson."
+                    </p>
+                    <p class="text-base text-slate-500 font-mono font-bold uppercase tracking-widest text-right">Deliver to Lumon Management by next session.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 28: COMPLIANCE CHECKLIST (END) -->
+        <section class="page">
+            <div class="page-content items-center">
+                <h2 class="font-mono text-lumon-blue font-bold tracking-widest mb-2 uppercase text-base text-center">End of Shift</h2>
+                <h1 class="text-4xl font-black text-lumon-dark uppercase tracking-tighter mb-8 text-center">Compliance Checklist</h1>
+                
+                <p class="text-xl font-medium mb-8 text-slate-700 text-center">Before logging out, ensure all pedagogical targets were met:</p>
+
+                <div class="space-y-4 max-w-2xl w-full text-xl font-mono font-bold text-slate-800">
+                    <label class="flex items-center gap-6 p-5 data-card cursor-pointer shadow-sm">
+                        <input type="checkbox" class="w-8 h-8 accent-lumon-blue">
+                        <span class="mt-1">Target Lexis introduced and discussed.</span>
+                    </label>
+                    <label class="flex items-center gap-6 p-5 data-card cursor-pointer shadow-sm">
+                        <input type="checkbox" class="w-8 h-8 accent-lumon-blue">
+                        <span class="mt-1">Second Conditional structure mastered.</span>
+                    </label>
+                    <label class="flex items-center gap-6 p-5 data-card cursor-pointer shadow-sm">
+                        <input type="checkbox" class="w-8 h-8 accent-lumon-blue">
+                        <span class="mt-1">Passive voice violations isolated.</span>
+                    </label>
+                    <label class="flex items-center gap-6 p-5 data-card cursor-pointer shadow-sm">
+                        <input type="checkbox" class="w-8 h-8 accent-lumon-blue">
+                        <span class="mt-1">Roleplay executed with correct intonation.</span>
+                    </label>
+                </div>
+
+                <div class="mt-12 text-center max-w-4xl border-t-2 border-slate-300 pt-8 w-full flex items-center justify-center gap-10">
+                    <div>
+                        <h2 class="font-black text-4xl uppercase tracking-widest mb-4 text-lumon-blue">Praise Kier.</h2>
+                        <p class="text-base font-bold text-slate-500 font-mono tracking-widest uppercase">You may now exit the Teacher's Guide.</p>
+                    </div>
+                    <span class="text-8xl drop-shadow-md">🧇</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- BOTTOM BAR (Pagination) -->
+    <footer class="fixed bottom-0 left-0 w-full h-20 bg-white border-t-2 border-lumon-blue z-40 flex items-center justify-between px-8">
+        <div class="flex-1 flex justify-start">
+            <button onclick="prevPage()" class="font-mono font-bold text-lumon-blue text-base px-6 py-2 border-2 border-lumon-blue hover:bg-lumon-blue hover:text-white transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-lumon-blue" id="btn-prev">
+                << PREVIOUS
+            </button>
+        </div>
+        
+        <div class="flex-1 flex flex-col items-center justify-center">
+            <div class="font-mono font-black text-2xl tracking-widest text-lumon-dark">
+                PAGE <span id="page-num" class="text-lumon-blue">01</span> / <span id="total-pages">28</span>
+            </div>
+            <div class="font-mono font-bold text-xs tracking-widest text-slate-400 mt-1">
+                POWERED BY WOLFLIX
+            </div>
+        </div>
+
+        <div class="flex-1 flex justify-end">
+            <button onclick="nextPage()" class="font-mono font-bold text-lumon-blue text-base px-6 py-2 border-2 border-lumon-blue hover:bg-lumon-blue hover:text-white transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-lumon-blue" id="btn-next">
+                NEXT >>
+            </button>
+        </div>
+    </footer>
+
+    <!-- SLIDE-OUT NOTEPAD -->
+    <aside id="notepad-panel" class="fixed top-16 right-0 w-full max-w-md h-[calc(100vh-9rem)] bg-[#fefce8] border-l-4 border-lumon-blue z-30 translate-x-full lumon-shadow flex flex-col">
+        <div class="p-4 border-b border-yellow-200 bg-yellow-50 flex justify-between items-center">
+            <h2 class="font-mono font-bold text-lumon-dark uppercase tracking-widest text-base flex items-center gap-2">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Lumon Notepad
+            </h2>
+            <button onclick="toggleNotepad()" class="text-slate-400 hover:text-lumon-dark font-black text-xl px-2">✕</button>
+        </div>
+        <textarea class="flex-1 w-full bg-transparent p-6 font-mono font-bold text-lumon-dark text-xl leading-relaxed outline-none resize-none placeholder:text-yellow-600/50" placeholder="Type your class notes, board work, or student feedback here..."></textarea>
+    </aside>
+
+    <!-- SLIDE-OUT DICTIONARY (LEXICON) -->
+    <aside id="dict-panel" class="fixed top-16 right-0 w-full max-w-md h-[calc(100vh-9rem)] bg-lumon-dark border-l-4 border-lumon-green z-50 translate-x-full lumon-shadow flex flex-col text-white">
+        <div class="p-4 border-b border-slate-700 bg-slate-900 flex justify-between items-center">
+            <h2 class="font-mono font-bold text-lumon-green uppercase tracking-widest text-base flex items-center gap-2">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                Lumon Lexicon
+            </h2>
+            <button onclick="closeDict()" class="text-slate-400 hover:text-white font-black text-xl px-2">✕</button>
+        </div>
+        <div class="flex-1 w-full bg-transparent p-8 overflow-y-auto">
+            <h3 id="dict-word" class="text-4xl font-black font-corp text-white mb-2 capitalize">Word</h3>
+            <p id="dict-def" class="text-slate-400 font-mono text-lg mb-8 leading-relaxed">Definition here.</p>
+            
+            <h4 class="font-bold text-lumon-green font-mono tracking-widest uppercase mb-2 text-sm border-b border-slate-700 pb-1">Lumon Approved Example</h4>
+            <p id="dict-ex" class="text-white italic text-lg mb-8 bg-slate-800 p-4 border-l-2 border-lumon-green">Example here.</p>
+            
+            <h4 class="font-bold text-lumon-blue font-mono tracking-widest uppercase mb-2 text-sm border-b border-slate-700 pb-1">Integration Question</h4>
+            <p id="dict-q" class="text-blue-200 text-lg">Question here.</p>
+        </div>
+    </aside>
+
+    <!-- JS LOGIC -->
+    <script>
+        // --- 1. Pagination Logic ---
+        let currentPage = 0;
+        const pages = document.querySelectorAll('.page');
+        const totalPages = pages.length;
+
+        function updatePagination() {
+            document.getElementById('page-num').innerText = (currentPage + 1).toString().padStart(2, '0');
+            document.getElementById('total-pages').innerText = totalPages;
+            document.getElementById('btn-prev').disabled = currentPage === 0;
+            document.getElementById('btn-next').disabled = currentPage === totalPages - 1;
+            
+            // Gestão das cores de fundo dependendo da fase da aula
+            document.body.classList.remove('innie-mode', 'outro-mode');
+            
+            if (currentPage >= 24) {
+                // A partir da Página 25 (Discussões e Final), ativa o azul bebé relaxante
+                document.body.classList.add('outro-mode');
+            } else if (currentPage >= 13) {
+                // A partir do Vídeo (Página 14), ativa o branco clínico Innie
+                document.body.classList.add('innie-mode');
+            }
+            
+            clearInterval(terminalTimer);
+            pages[currentPage].scrollTo(0,0);
+        }
+
+        function goToPage(index) {
+            if(index < 0 || index >= totalPages) return;
+            pages[currentPage].classList.remove('active');
+            currentPage = index;
+            pages[currentPage].classList.add('active');
+            updatePagination();
+        }
+
+        function nextPage() { goToPage(currentPage + 1); }
+        function prevPage() { goToPage(currentPage - 1); }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight') nextPage();
+            if(e.key === 'ArrowLeft') prevPage();
+        });
+
+        // --- 2. Fullscreen & Notepad ---
+        function toggleFullscreen() {
+            const doc = window.document;
+            const docEl = doc.documentElement;
+            const req = docEl.requestFullscreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            
+            try {
+                if (!doc.fullscreenElement) {
+                    const promise = req ? req.call(docEl) : null;
+                    if (promise && promise.catch) {
+                        promise.catch(err => console.warn("Modo tela cheia bloqueado.", err));
+                    }
+                } else {
+                    const promise = exit ? exit.call(doc) : null;
+                    if (promise && promise.catch) {
+                        promise.catch(err => console.warn("Erro ao sair da tela cheia.", err));
+                    }
+                }
+            } catch (err) {
+                console.warn("Ação de tela cheia falhou:", err);
+            }
+        }
+
+        function toggleNotepad() {
+            document.getElementById('notepad-panel').classList.toggle('translate-x-full');
+            document.getElementById('dict-panel').classList.add('translate-x-full'); 
+        }
+
+        // --- Lumon Lexicon (Dictionary) Logic ---
+        const dictDB = {
+            'surgical': {
+                def: 'Relating to medical operations; extremely precise.',
+                ex: 'The transition between outie and innie must be surgical.',
+                q: 'If you could surgically remove one specific skill from your brain to make room for a new one, what would you swap?'
+            },
+            'procedure': {
+                def: 'An official way of doing something; a medical operation.',
+                ex: 'Please trust the procedure. Kier knows best.',
+                q: 'What is a daily procedure or routine you hate doing?'
+            },
+            'balance': {
+                def: 'A situation in which different elements are equal or in the correct proportions.',
+                ex: 'Severance provides the ultimate work-life balance.',
+                q: 'Do you think separating work and life completely would make you happier?'
+            },
+            'grief': {
+                def: 'Deep sorrow, especially that caused by someone\'s death.',
+                ex: 'Grief is a distraction from your macrodata refinement.',
+                q: 'Is it better to confront grief immediately or distract yourself from it?'
+            },
+            'sever': {
+                def: 'To divide by cutting or slicing, suddenly and completely.',
+                ex: 'We have severed your perceptual continuity.',
+                q: 'If you could sever your connection to one social media app permanently, which one?'
+            },
+            'severed_floor': {
+                def: 'The isolated underground level of Lumon Industries.',
+                ex: 'Sunshine is not permitted on the severed floor.',
+                q: 'How does your physical environment affect your mood at work or school?'
+            },
+            'cope': {
+                def: 'To deal effectively with something difficult.',
+                ex: 'He chose severance to cope with the outside world.',
+                q: 'What is your healthiest coping mechanism when stressed?'
+            },
+            'hell': {
+                def: 'A place of suffering; a state of extreme misery.',
+                ex: 'Hell is just the product of a severed imagination.',
+                q: 'What does a "workplace hell" look like to you?'
+            },
+            'imagination': {
+                def: 'The faculty or action of forming new ideas, or images.',
+                ex: 'Please refrain from using your imagination during work hours.',
+                q: 'Why would a corporation want to limit an employee\'s imagination?'
+            },
+            'chose': {
+                def: 'Past tense of choose; to pick out or select.',
+                ex: 'You chose to come back. You asked for this.',
+                q: 'Have you ever made a choice you immediately regretted?'
+            }
+        };
+
+        function openDict(key) {
+            const data = dictDB[key];
+            if(!data) return;
+            document.getElementById('notepad-panel').classList.add('translate-x-full');
+            document.getElementById('dict-word').innerText = key.replace('_', ' ');
+            document.getElementById('dict-def').innerText = data.def;
+            document.getElementById('dict-ex').innerText = '"' + data.ex + '"';
+            document.getElementById('dict-q').innerText = data.q;
+            document.getElementById('dict-panel').classList.remove('translate-x-full');
+        }
+
+        function closeDict() {
+            document.getElementById('dict-panel').classList.add('translate-x-full');
+        }
+
+        // --- 3. Break Room Polygraph ---
+        function triggerPolygraph(isSincere) {
+            const box = document.getElementById('polygraph-box');
+            const overlay = document.getElementById('polygraph-overlay');
+            const feedback = document.getElementById('polygraph-feedback');
+            
+            overlay.classList.remove('bg-red-600', 'bg-green-600', 'opacity-0');
+            
+            if(!isSincere) {
+                box.classList.add('shake');
+                overlay.classList.add('bg-red-600');
+                overlay.style.opacity = '0.4';
+                feedback.innerText = "> I'm afraid you didn't mean it. Read it again.";
+                feedback.className = "h-10 mt-6 text-center font-mono font-bold text-xl uppercase tracking-widest text-red-600";
+                setTimeout(() => { box.classList.remove('shake'); overlay.style.opacity = '0'; }, 600);
+            } else {
+                overlay.classList.add('bg-green-600');
+                overlay.style.opacity = '0.4';
+                feedback.innerText = "> All physiological responses are correct. You may leave.";
+                feedback.className = "h-10 mt-6 text-center font-mono font-bold text-xl uppercase tracking-widest text-lumon-green";
+                setTimeout(() => { overlay.style.opacity = '0'; }, 1500);
+            }
+        }
+
+        // --- 4. Disappearing Text (Sever Procedure) ---
+        const originalMemoryText = "Lumon Industries has developed a procedure to sever your work memories from your personal memories. You'll undergo a brief surgical procedure, and then you'll wake up on the severed floor.";
+        let memorySeverLevel = 0;
+        
+        function initSeverText() {
+            const container = document.getElementById('sever-text-container');
+            container.innerHTML = originalMemoryText.split(' ').map(word => `<span class="sever-word transition-colors px-1">${word}</span>`).join(' ');
+        }
+
+        function severTextMemory() {
+            memorySeverLevel += 0.2;
+            const words = document.querySelectorAll('.sever-word');
+            words.forEach(w => {
+                if(!w.classList.contains('redacted') && Math.random() < memorySeverLevel) {
+                    w.classList.add('redacted');
+                    w.innerText = "█".repeat(w.innerText.length);
+                }
+            });
+        }
+        
+        function resetSeverText() {
+            memorySeverLevel = 0;
+            initSeverText();
+        }
+
+        // --- 5. Compliance Terminal (Code Detector) ---
+        let terminalTimer;
+        let timeLeft = 15;
+        
+        function startTerminal() {
+            document.getElementById('terminal-start').classList.add('hidden');
+            document.getElementById('terminal-game').classList.remove('hidden');
+            const bar = document.getElementById('terminal-timer');
+            timeLeft = 15;
+            bar.style.transitionDuration = '15s';
+            bar.style.width = '0%';
+
+            terminalTimer = setInterval(() => {
+                timeLeft--;
+                if(timeLeft <= 0) {
+                    clearInterval(terminalTimer);
+                    endTerminal(false, "TIME EXPIRED. VIOLATION UNNOTICED.");
+                }
+            }, 1000);
+        }
+
+        function checkTerminal(isCorrect) {
+            clearInterval(terminalTimer);
+            if(isCorrect) {
+                endTerminal(true, "> THREAT NEUTRALIZED. GOOD WORK.");
+            } else {
+                endTerminal(false, "> ERROR. INCORRECT IDENTIFICATION.");
+            }
+        }
+
+        function endTerminal(success, msg) {
+            document.getElementById('terminal-game').classList.add('hidden');
+            const resBox = document.getElementById('terminal-result');
+            const resMsg = document.getElementById('t-res-msg');
+            resBox.classList.remove('hidden');
+            resMsg.innerText = msg;
+            resMsg.className = `font-mono text-3xl font-black mb-8 animate-pulse-fast ${success ? 'text-green-400' : 'text-red-500'}`;
+            if(!success) document.querySelector('.crt').classList.add('border-red-500');
+        }
+
+        function resetTerminal() {
+            document.getElementById('terminal-result').classList.add('hidden');
+            document.getElementById('terminal-start').classList.remove('hidden');
+            document.getElementById('terminal-timer').style.transitionDuration = '0s';
+            document.getElementById('terminal-timer').style.width = '100%';
+            document.querySelector('.crt').classList.remove('border-red-500');
+        }
+
+        // Init
+        updatePagination();
+        initSeverText();
+    </script>
+</body>
+</html>
